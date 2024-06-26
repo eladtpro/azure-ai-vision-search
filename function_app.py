@@ -31,24 +31,22 @@ print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 
 @app.route(route="test", methods=["GET"])
 def test(req: func.HttpRequest) -> func.HttpResponse:
-    AI_VISION_ENDPOINT = os.getenv("AI_VISION_ENDPOINT")
-
-    return f"AI_VISION_ENDPOINT: {AI_VISION_ENDPOINT}"
+    url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
+    return f"{url}"
 
 
 @app.route(route="url", methods=["GET"])
 def url(req: func.HttpRequest) -> func.HttpResponse:
-    AI_VISION_ENDPOINT = os.getenv("AI_VISION_ENDPOINT")
-    AI_VISION_API_KEY = os.getenv("AI_VISION_API_KEY")
-    url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
+    vision_url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
 
     headers = {"Ocp-Apim-Subscription-Key": AI_VISION_API_KEY}
 
-    response = requests.get(url, headers=headers)
+    response = requests.get(vision_url, headers=headers)
     if response.status_code == 200:
         return response.json()
 
-    return func.HttpResponse(f"ERROR: {response.status_code} - {response.text}")
+    return func.HttpResponse(f"ERROR: {response.status_code} - {response.text}",
+                             status_code=response.status_code, mimetype="text/plain")
 
 
 @app.route(route="index", methods=["POST"])
