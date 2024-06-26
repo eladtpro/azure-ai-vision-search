@@ -44,7 +44,11 @@ def url(req: func.HttpRequest) -> func.HttpResponse:
 
     headers = {"Ocp-Apim-Subscription-Key": AI_VISION_API_KEY}
 
-    return requests.get(url, headers=headers).json()
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+
+    return func.HttpResponse(f"ERROR: {response.status_code} - {response.text}")
 
 
 @app.route(route="index", methods=["POST"])
