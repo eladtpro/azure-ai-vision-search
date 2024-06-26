@@ -9,7 +9,7 @@
 			"isBackground": true,
 			"dependsOn": "pip install (functions)",
 			"options": {
-				"cwd": "${workspaceFolder}/functions"
+				"cwd": "${workspaceFolder}"
 			}
 		},
 		{
@@ -18,7 +18,7 @@
 			"command": "extensions install",
 			"problemMatcher": [],
 			"options": {
-				"cwd": "${workspaceFolder}/functions"
+				"cwd": "${workspaceFolder}"
 			}
 		},
 		{
@@ -35,7 +35,7 @@
 			},
 			"problemMatcher": [],
 			"options": {
-				"cwd": "${workspaceFolder}/functions"
+				"cwd": "${workspaceFolder}"
 			},
 			"dependsOn": "func: extensions install"
 		}
