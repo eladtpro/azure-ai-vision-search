@@ -28,7 +28,7 @@ AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_AI_SEARCH_INDEX_NAME")
 
 print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 
-@app.route(route="index")
+@app.route(route="index", methods=["GET", "POST"])
 def index(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(
         "> GetImageEmbeddings:Python HTTP trigger function processed a request."
@@ -74,7 +74,7 @@ def index(req: func.HttpRequest) -> func.HttpResponse:
 
 
 @app.route("/test", methods=["GET"])
-def test():
+def test(req: func.HttpRequest) -> func.HttpResponse:
     AI_VISION_ENDPOINT = os.getenv("AI_VISION_ENDPOINT")
     AI_VISION_API_KEY = os.getenv("AI_VISION_API_KEY")
     url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
@@ -101,7 +101,7 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(f"Rephrased query: {query}")
 
     vector_query = VectorizedQuery(
-        vector=generate_embeddings_text(query, AI_VISION_ENDPOINT, AI_VISION_API_KEY),
+        vector=generate_embeddings_text(query),
         k_nearest_neighbors=max_images,
         fields="imageVector",
     )
@@ -145,7 +145,7 @@ def ask_openai(query):
     return chat_completion.choices[0].message.content
 
 
-def generate_embeddings_text(text, AI_VISION_ENDPOINT, AI_VISION_API_KEY):
+def generate_embeddings_text(text):
 
     logging.info(f"Generating embeddings...")
     logging.info(f"Input text: {text}")
