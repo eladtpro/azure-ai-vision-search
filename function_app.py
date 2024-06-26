@@ -108,6 +108,14 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
 
     ssrc = time.time()
     # Perform vector search
+    global search_client
+    if search_client is None:
+        search_client = SearchClient(
+            AI_SEARCH_SERVICE_ENDPOINT,
+            AI_SEARCH_INDEX_NAME,
+            AzureKeyCredential(AZURE_SEARCH_ADMIN_KEY),
+        )
+
     results = search_client.search(
         search_text=None, vector_queries=[vector_query], select=["title", "imageUrl"]
     )
@@ -129,6 +137,14 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
 def ask_openai(query):
     logging.info(f"Asking OpenAI...")
     logging.info(f"Input query: {query}")
+
+    global chat_client
+    if chat_client is None:
+        chat_client = AzureOpenAI(
+            azure_endpoint=AZURE_OPENAI_ENDPOINT,
+            api_key=AZURE_OPENAI_API_KEY,
+            api_version=API_VERSION,
+        )
 
     chat_completion = chat_client.chat.completions.create(
         messages=[
@@ -170,22 +186,3 @@ def generate_embeddings_text(text):
     else:
         print(f"Error: {response.status_code} - {response.text}")
         return None
-
-async def initialize_clients():
-    global search_client, chat_client
-    search_client = SearchClient(
-        AI_SEARCH_SERVICE_ENDPOINT,
-        AI_SEARCH_INDEX_NAME,
-        AzureKeyCredential(AZURE_SEARCH_ADMIN_KEY))
-    chat_client = AzureOpenAI(
-        azure_endpoint=AZURE_OPENAI_ENDPOINT,
-        api_key=AZURE_OPENAI_API_KEY,
-        api_version=API_VERSION)
-
-async def main():
-    await initialize_clients()
-    print("Initialized SearchClient")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
