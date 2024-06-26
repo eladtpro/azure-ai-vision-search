@@ -37,7 +37,7 @@ def test(req: func.HttpRequest) -> func.HttpResponse:
 
 
 @app.route(route="url", methods=["GET"])
-def test(req: func.HttpRequest) -> func.HttpResponse:
+def url(req: func.HttpRequest) -> func.HttpResponse:
     AI_VISION_ENDPOINT = os.getenv("AI_VISION_ENDPOINT")
     AI_VISION_API_KEY = os.getenv("AI_VISION_API_KEY")
     url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
