@@ -28,7 +28,26 @@ AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_AI_SEARCH_INDEX_NAME")
 
 print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 
-@app.route(route="index", methods=["GET", "POST"])
+
+@app.route(route="test", methods=["GET"])
+def test(req: func.HttpRequest) -> func.HttpResponse:
+    AI_VISION_ENDPOINT = os.getenv("AI_VISION_ENDPOINT")
+
+    return f"AI_VISION_ENDPOINT: {AI_VISION_ENDPOINT}"
+
+
+@app.route(route="url", methods=["GET"])
+def test(req: func.HttpRequest) -> func.HttpResponse:
+    AI_VISION_ENDPOINT = os.getenv("AI_VISION_ENDPOINT")
+    AI_VISION_API_KEY = os.getenv("AI_VISION_API_KEY")
+    url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
+
+    headers = {"Ocp-Apim-Subscription-Key": AI_VISION_API_KEY}
+
+    return requests.get(url, headers=headers).json()
+
+
+@app.route(route="index", methods=["POST"])
 def index(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(
         "> GetImageEmbeddings:Python HTTP trigger function processed a request."
@@ -73,18 +92,7 @@ def index(req: func.HttpRequest) -> func.HttpResponse:
     return func.HttpResponse(json.dumps(response_body), mimetype="application/json")
 
 
-@app.route("/test", methods=["GET"])
-def test(req: func.HttpRequest) -> func.HttpResponse:
-    AI_VISION_ENDPOINT = os.getenv("AI_VISION_ENDPOINT")
-    AI_VISION_API_KEY = os.getenv("AI_VISION_API_KEY")
-    url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
-
-    headers = {"Ocp-Apim-Subscription-Key": AI_VISION_API_KEY}
-
-    return requests.get(url, headers=headers).json()
-
-
-@app.route("/search", methods=["GET", "POST"])
+@app.route(route="search", methods=["POST"])
 def search(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(f"Searching...")
     data = req.get_json()
