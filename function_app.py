@@ -31,13 +31,13 @@ print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 
 @app.route(route="url", methods=["GET"])
 def url(req: func.HttpRequest) -> func.HttpResponse:
-    vision_url = f"{AI_VISION_ENDPOINT}computervision/models?api-version=2023-02-01-preview"
+    vision_url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
     return f"{vision_url}"
 
 
 @app.route(route="test", methods=["GET"])
 def test(req: func.HttpRequest) -> func.HttpResponse:
-    vision_url = f"{AI_VISION_ENDPOINT}computervision/models?api-version=2023-02-01-preview"
+    vision_url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
 
     headers = {"Ocp-Apim-Subscription-Key": AI_VISION_API_KEY}
 
@@ -49,8 +49,8 @@ def test(req: func.HttpRequest) -> func.HttpResponse:
                              status_code=response.status_code, mimetype="text/plain")
 
 
-@app.route(route="index", methods=["POST"])
-def index(req: func.HttpRequest) -> func.HttpResponse:
+@app.route(route="vectorize", methods=["POST"])
+def vectorize(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(
         "> GetImageEmbeddings:Python HTTP trigger function processed a request."
     )
@@ -69,7 +69,6 @@ def index(req: func.HttpRequest) -> func.HttpResponse:
         logging.info(f"Input imageUrl: {imageUrl}")
         logging.info(f"Input recordId: {recordId}")
 
-        # TODO Add SaS token to imageUrl for non-public containers
         # Get image embeddings
         sas_token = helper_functions.create_service_sas_blob(imageUrl)
 
