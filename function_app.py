@@ -82,9 +82,13 @@ def test(req: func.HttpRequest) -> func.HttpResponse:
                              status_code=response.status_code, mimetype="text/plain")
 
 
+@app.route(route="GetImageEmbeddings", methods=["POST"])
+def GetImageEmbeddings(req: func.HttpRequest) -> func.HttpResponse:
+    return vectorize(req)
+
+
 @app.function_name(name="vectorize")
 @app.route(route="vectorize", methods=["POST"])
-@app.route(route="GetImageEmbeddings", methods=["POST"])
 def vectorize(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("> GetImageEmbeddings:Python HTTP trigger function processed a request.")
 
