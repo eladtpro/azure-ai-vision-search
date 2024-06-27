@@ -30,9 +30,9 @@ print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 
 
 @app.route(route="url", methods=["GET"])
-def test(req: func.HttpRequest) -> func.HttpResponse:
-    url = f"{AI_VISION_ENDPOINT}computervision/models?api-version=2023-02-01-preview"
-    return f"{url}"
+def url(req: func.HttpRequest) -> func.HttpResponse:
+    vision_url = f"{AI_VISION_ENDPOINT}computervision/models?api-version=2023-02-01-preview"
+    return f"{vision_url}"
 
 
 @app.route(route="test", methods=["GET"])
