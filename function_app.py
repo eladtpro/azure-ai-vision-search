@@ -12,6 +12,16 @@ from azure.search.documents.models import VectorizedQuery
 from helpers import helper_functions
 
 
+# Define a class to represent the desired object structure
+class Data:
+    def __init__(self, imageUrl):
+        self.imageUrl = imageUrl
+class EventData:
+    def __init__(self, recordId, data):
+        self.recordId = recordId
+        self.data = data
+
+
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 search_client: SearchClient = None
 chat_client: AzureOpenAI = None
@@ -28,13 +38,36 @@ AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_AI_SEARCH_INDEX_NAME")
 
 print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 
+@app.function_name(name="index")
+@app.event_grid_trigger(arg_name="event")
+def index(event: func.EventGridEvent):
+    logging.info('Python EventGrid trigger processed an event: %s', event.get_json())
+    result = json.dumps({
+        'id': event.id,
+        'data': event.get_json(),
+        'topic': event.topic,
+        'subject': event.subject,
+        'event_type': event.event_type,
+    })
+    print(f"EventGrid trigger processed an event: {result}")    
 
+    data = Data(result.url)
+    event_data = EventData(result.id, data)
+    values = [event_data]
+    vactor = vectorizeImage(values)
+
+    logging.info('Python EventGrid trigger processed an event: %s', vactor)
+    return vactor
+
+
+@app.function_name(name="url")
 @app.route(route="url", methods=["GET"])
 def url(req: func.HttpRequest) -> func.HttpResponse:
     vision_url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
     return f"{vision_url}"
 
 
+@app.function_name(name="test")
 @app.route(route="test", methods=["GET"])
 def test(req: func.HttpRequest) -> func.HttpResponse:
     vision_url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
@@ -49,40 +82,17 @@ def test(req: func.HttpRequest) -> func.HttpResponse:
                              status_code=response.status_code, mimetype="text/plain")
 
 
+@app.function_name(name="vectorize")
 @app.route(route="vectorize", methods=["POST"])
 def vectorize(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info(
-        "> GetImageEmbeddings:Python HTTP trigger function processed a request."
-    )
+    logging.info("> GetImageEmbeddings:Python HTTP trigger function processed a request.")
 
     # Extract values from request payload
     req_body = req.get_body().decode("utf-8")
     logging.info(f"Request body: {req_body}")
     request = json.loads(req_body)
     values = request["values"]
-
-    # Process values and generate the response payload
-    response_values = []
-    for value in values:
-        imageUrl = value["data"]["imageUrl"]
-        recordId = value["recordId"]
-        logging.info(f"Input imageUrl: {imageUrl}")
-        logging.info(f"Input recordId: {recordId}")
-
-        # Get image embeddings
-        sas_token = helper_functions.create_service_sas_blob(imageUrl)
-
-        vector = helper_functions.get_image_embeddings(imageUrl, sas_token)
-
-        # Add the processed value to the response payload
-        response_values.append(
-            {
-                "recordId": recordId,
-                "data": {"vector": vector},
-                "errors": None,
-                "warnings": None,
-            }
-        )
+    response_values = vectorizeImage(values)    
 
     # Create the response object
     response_body = {"values": response_values}
@@ -93,6 +103,7 @@ def vectorize(req: func.HttpRequest) -> func.HttpResponse:
     return func.HttpResponse(json.dumps(response_body), mimetype="application/json")
 
 
+@app.function_name(name="search")
 @app.route(route="search", methods=["POST"])
 def search(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(f"Searching...")
@@ -141,6 +152,32 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
             }
         )
     return json.dumps(output)
+
+
+def vectorizeImage(values):
+    # Process values and generate the response payload
+    response_values = []
+    for value in values:
+        imageUrl = value["data"]["imageUrl"]
+        recordId = value["recordId"]
+        logging.info(f"Input imageUrl: {imageUrl}")
+        logging.info(f"Input recordId: {recordId}")
+
+        # Get image embeddings
+        sas_token = helper_functions.create_service_sas_blob(imageUrl)
+
+        vector = helper_functions.get_image_embeddings(imageUrl, sas_token)
+
+        # Add the processed value to the response payload
+        response_values.append(
+            {
+                "recordId": recordId,
+                "data": {"vector": vector},
+                "errors": None,
+                "warnings": None,
+            }
+        )
+    return response_values
 
 
 def ask_openai(query):
