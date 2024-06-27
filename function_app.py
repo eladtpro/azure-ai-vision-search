@@ -43,11 +43,8 @@ print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 def index(event: func.EventGridEvent):
     logging.info('Python EventGrid trigger processed an event: %s', event.get_json())
     result = json.dumps({
-        'id': event.id,
-        'data': event.get_json(),
-        'topic': event.topic,
-        'subject': event.subject,
-        'event_type': event.event_type,
+        'id': event.requestId,
+        'url': event.url
     })
     print(f"EventGrid trigger processed an event: {result}")    
 
