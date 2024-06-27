@@ -26,7 +26,7 @@ AI_SEARCH_SERVICE_ENDPOINT = os.getenv("AI_SEARCH_AI_SEARCH_SERVICE_ENDPOINT")
 AZURE_SEARCH_ADMIN_KEY = os.getenv("AZURE_SEARCH_ADMIN_KEY")
 AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_AI_SEARCH_INDEX_NAME")
 
-print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
+logging.info(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 
 # func.EventGridEvent schema
 # {
@@ -48,23 +48,30 @@ print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 @app.function_name(name="index")
 @app.event_grid_trigger(arg_name="event")
 def index(event: func.EventGridEvent):
-    logging.info('Python EventGrid trigger processed an event: %s', event.get_json())
+    result = json.dumps({
+        'id': event.id,
+        'data': event.get_json(),
+        'topic': event.topic,
+        'subject': event.subject,
+        'event_type': event.event_type,
+    })
+    logging.info('Python EventGrid trigger processed an event: %s', result)
         
     # Construct the desired JSON structure
     event_data = {
-        "recordId": event.id,
+        "recordId": result["data"]["clientRequestId"],
         "data": {
-            "imageUrl": event.get_json().get('data', {}).get('url')
+            "imageUrl": result["data"]["url"]
         }
     }
     
-    print(f"EventGrid trigger processed an event: {event_data}")    
+    logging.info(f"EventGrid trigger processed an event: {event_data}")    
 
     values = [event_data]
-    vactor = vectorizeImage(values)
+    vector = vectorizeImage(values)
 
-    logging.info('Python EventGrid trigger processed an event: %s', vactor)
-    return vactor
+    logging.info('vector event: %s', vector)
+    return vector
 
 
 @app.function_name(name="url")
@@ -152,7 +159,7 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
         search_text=None, vector_queries=[vector_query], select=["title", "imageUrl"]
     )
 
-    print(f"Time taken for florence search: {time.time() - ssrc}")
+    logging.info(f"Time taken for florence search: {time.time() - ssrc}")
     # Print the search results
     output = []
     for result in results:
@@ -236,11 +243,13 @@ def generate_embeddings_text(text):
 
     s = time.time()
     response = requests.post(url, headers=headers, json=data)
-    print(f"Time taken florence text embedding: {time.time() - s}")
+    logging.info(f"Time taken florence text embedding: {time.time() - s}")
 
     if response.status_code == 200:
         embeddings = response.json()["vector"]
         return embeddings
     else:
-        print(f"Error: {response.status_code} - {response.text}")
+        logging.info(f"Error: {response.status_code} - {response.text}")
         return None
+
+
