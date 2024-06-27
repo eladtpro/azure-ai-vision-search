@@ -38,18 +38,34 @@ AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_AI_SEARCH_INDEX_NAME")
 
 print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 
+# {
+#     'api': 'PutBlob', 
+#     'clientRequestId': '06b68280-dab5-4457-b04a-b28b962be01b', 
+#     'requestId': 'a71f2657-401e-0012-6968-c85439000000', 
+#     'eTag': '0x8DC968003D068E1', 
+#     'contentType': 'image/png', 
+#     'contentLength': 14816, 
+#     'blobType': 'BlockBlob', 
+#     'url': 'https://staiimages.blob.core.windows.net/data/draft-logo.png', 
+#     'sequencer': '0000000000000000000000000001EA0B0000000000337808', 
+#     'storageDiagnostics': 
+#     {
+#         'batchId': 'ec691e77-a006-003a-0068-c82386000000'
+#     }
+# }
+
 @app.function_name(name="index")
 @app.event_grid_trigger(arg_name="event")
 def index(event: func.EventGridEvent):
     logging.info('Python EventGrid trigger processed an event: %s', event.get_json())
     result = json.dumps({
         'id': event.requestId,
-        'url': event.url
+        'url': event.data.url
     })
     print(f"EventGrid trigger processed an event: {result}")    
 
-    data = Data(result.url)
-    event_data = EventData(result.id, data)
+    data = Data(event.data['url'])
+    event_data = EventData(event.id, data)
     values = [event_data]
     vactor = vectorizeImage(values)
 
