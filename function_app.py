@@ -29,15 +29,15 @@ AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_AI_SEARCH_INDEX_NAME")
 print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 
 
-@app.route(route="test", methods=["GET"])
+@app.route(route="url", methods=["GET"])
 def test(req: func.HttpRequest) -> func.HttpResponse:
-    url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
+    url = f"{AI_VISION_ENDPOINT}computervision/models?api-version=2023-02-01-preview"
     return f"{url}"
 
 
-@app.route(route="url", methods=["GET"])
-def url(req: func.HttpRequest) -> func.HttpResponse:
-    vision_url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
+@app.route(route="test", methods=["GET"])
+def test(req: func.HttpRequest) -> func.HttpResponse:
+    vision_url = f"{AI_VISION_ENDPOINT}computervision/models?api-version=2023-02-01-preview"
 
     headers = {"Ocp-Apim-Subscription-Key": AI_VISION_API_KEY}
 
