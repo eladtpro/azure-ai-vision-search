@@ -12,16 +12,6 @@ from azure.search.documents.models import VectorizedQuery
 from helpers import helper_functions
 
 
-# Define a class to represent the desired object structure
-class Data:
-    def __init__(self, imageUrl):
-        self.imageUrl = imageUrl
-class EventData:
-    def __init__(self, recordId, data):
-        self.recordId = recordId
-        self.data = data
-
-
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 search_client: SearchClient = None
 chat_client: AzureOpenAI = None
@@ -38,6 +28,7 @@ AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_AI_SEARCH_INDEX_NAME")
 
 print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 
+# func.EventGridEvent schema
 # {
 #     'api': 'PutBlob', 
 #     'clientRequestId': '06b68280-dab5-4457-b04a-b28b962be01b', 
@@ -58,14 +49,17 @@ print(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 @app.event_grid_trigger(arg_name="event")
 def index(event: func.EventGridEvent):
     logging.info('Python EventGrid trigger processed an event: %s', event.get_json())
-    result = json.dumps({
-        'id': event.requestId,
-        'url': event.data.url
-    })
-    print(f"EventGrid trigger processed an event: {result}")    
+        
+    # Construct the desired JSON structure
+    event_data = {
+        "recordId": event.id,
+        "data": {
+            "imageUrl": event.get_json().get('data', {}).get('url')
+        }
+    }
+    
+    print(f"EventGrid trigger processed an event: {event_data}")    
 
-    data = Data(event.data['url'])
-    event_data = EventData(event.id, data)
     values = [event_data]
     vactor = vectorizeImage(values)
 
