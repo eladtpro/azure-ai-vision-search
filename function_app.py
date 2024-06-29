@@ -87,8 +87,8 @@ def index(event: func.EventGridEvent):
     response_body = {"IndexRaw values": response_values}
     logging.info(f"IndexRaw Response body: {response_body}")
 
-    # Return the response
-    return func.HttpResponse(json.dumps(response_body), mimetype="application/json")
+    # # Return the response
+    # return func.HttpResponse(json.dumps(response_body), mimetype="application/json")
 
 
 @app.route(route="indexraw", methods=["GET"])
