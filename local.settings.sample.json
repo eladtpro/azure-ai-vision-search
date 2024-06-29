@@ -1,0 +1,19 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "<Your AzureWebJobsStorage>",
+        "FUNCTIONS_WORKER_RUNTIME": "python",
+        "AzureWebJobsFeatureFlags": "EnableWorkerIndexing",
+        "SCM_DO_BUILD_DURING_DEPLOYMENT": "true",
+        "AZURE_OPENAI_API_KEY":"<Your Azure OpenAI API Key>",
+        "AZURE_OPENAI_ENDPOINT":"<Your Azure OpenAI Endpoint>",
+        "OPEN_AI_MODEL":"gpt-35-turbo", 
+        "API_VERSION":"2024-02-01",
+        "AI_VISION_ENDPOINT":"<Your Azure Vision Endpoint>",
+        "AI_VISION_API_KEY":"<Your Azure Vision API Key>",
+        "AI_SEARCH_SERVICE_ENDPOINT":"<Your Azure Search Service Endpoint>",
+        "AZURE_SEARCH_ADMIN_KEY":"<Your Azure Search Admin Key>",
+        "AI_SEARCH_INDEX_NAME":"<Your Azure Search Index Name>",
+        "ACCOUNT_KEY":"<Your Account Key>"
+    }
+}
