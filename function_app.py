@@ -100,9 +100,6 @@ def indexraw(req: func.HttpRequest) -> func.HttpResponse:
     return vector
 
 
-    return vectorize(req)
-
-
 @app.route(route="GetImageEmbeddings", methods=["POST"])
 def GetImageEmbeddings(req: func.HttpRequest) -> func.HttpResponse:
     return vectorize(req)
