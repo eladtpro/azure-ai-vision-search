@@ -87,8 +87,25 @@ def index(event: func.EventGridEvent):
     response_body = {"IndexRaw values": response_values}
     logging.info(f"IndexRaw Response body: {response_body}")
 
-    # # Return the response
-    # return func.HttpResponse(json.dumps(response_body), mimetype="application/json")
+    global search_client
+    if search_client is None:
+        logging.info(f"Creating search client. AI_SEARCH_SERVICE_ENDPOINT: {AI_SEARCH_SERVICE_ENDPOINT}, AI_SEARCH_INDEX_NAME: {AI_SEARCH_INDEX_NAME}, AZURE_SEARCH_ADMIN_KEY: {AZURE_SEARCH_ADMIN_KEY}")
+        search_client = SearchClient(
+            AI_SEARCH_SERVICE_ENDPOINT,
+            AI_SEARCH_INDEX_NAME,
+            AzureKeyCredential(AZURE_SEARCH_ADMIN_KEY),
+        )
+
+    # [START upload_document]
+    doc = {
+        "id": image_url,
+        "imageUrl": image_url,
+        "imageVector": response_values,
+        "title": "Azure Inn",
+    }
+
+    result = search_client.upload_documents(documents=[doc])
+    logging.info(f"Upload documents result: {result}")
 
 
 @app.route(route="indexraw", methods=["GET"])
