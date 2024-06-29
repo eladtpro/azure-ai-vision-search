@@ -100,7 +100,7 @@ def index(event: func.EventGridEvent):
     doc = {
         "id": image_url,
         "imageUrl": image_url,
-        "imageVector": response_values,
+        "imageVector": json.dumps(response_values),
         "title": "Azure Inn",
     }
 
