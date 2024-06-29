@@ -22,9 +22,9 @@ OPEN_AI_MODEL = os.getenv("OPEN_AI_MODEL")
 API_VERSION = os.getenv("API_VERSION")
 AI_VISION_ENDPOINT = os.getenv("AI_VISION_ENDPOINT")
 AI_VISION_API_KEY = os.getenv("AI_VISION_API_KEY")
-AI_SEARCH_SERVICE_ENDPOINT = os.getenv("AI_SEARCH_AI_SEARCH_SERVICE_ENDPOINT")
+AI_SEARCH_SERVICE_ENDPOINT = os.getenv("AI_SEARCH_SERVICE_ENDPOINT")
 AZURE_SEARCH_ADMIN_KEY = os.getenv("AZURE_SEARCH_ADMIN_KEY")
-AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_AI_SEARCH_INDEX_NAME")
+AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_INDEX_NAME")
 
 logging.info(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 logging.info(f"AI_VISION_ENDPOINT endpoint ==> {AI_VISION_ENDPOINT}")
@@ -156,6 +156,7 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
     # Perform vector search
     global search_client
     if search_client is None:
+        logging.info(f"Creating search client. AI_SEARCH_SERVICE_ENDPOINT: {AI_SEARCH_SERVICE_ENDPOINT}, AI_SEARCH_INDEX_NAME: {AI_SEARCH_INDEX_NAME}, AZURE_SEARCH_ADMIN_KEY: {AZURE_SEARCH_ADMIN_KEY}")
         search_client = SearchClient(
             AI_SEARCH_SERVICE_ENDPOINT,
             AI_SEARCH_INDEX_NAME,
@@ -253,6 +254,7 @@ def generate_embeddings_text(text):
     logging.info(f"Time taken florence text embedding: {time.time() - s}")
 
     if response.status_code == 200:
+        # logging.info(f"Embeddings: {response.json()}")
         embeddings = response.json()["vector"]
         return embeddings
     else:
