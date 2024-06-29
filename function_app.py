@@ -81,10 +81,14 @@ def index(event: func.EventGridEvent):
     logging.info(f"EventGrid trigger processed an event: {event_data}")    
 
     values = [event_data]
-    vector = vectorizeImage(values)
+    response_values = vectorizeImage(values)
 
-    logging.info('vector event: %s', vector)
-    return vector
+    # Create the response object
+    response_body = {"IndexRaw values": response_values}
+    logging.info(f"IndexRaw Response body: {response_body}")
+
+    # Return the response
+    return func.HttpResponse(json.dumps(response_body), mimetype="application/json")
 
 
 @app.route(route="indexraw", methods=["GET"])
