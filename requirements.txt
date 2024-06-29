@@ -12,7 +12,3 @@ azure-storage-blob==12.20.0
 charset-normalizer==3.3.2
 requests==2.31.0
 openai==1.6.1
-
-
-
-

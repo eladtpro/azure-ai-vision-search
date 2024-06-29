@@ -1,5 +1,5 @@
-import asyncio
 import os
+import random
 import azure.functions as func
 import logging
 from azure.core.credentials import AzureKeyCredential
@@ -27,6 +27,30 @@ AZURE_SEARCH_ADMIN_KEY = os.getenv("AZURE_SEARCH_ADMIN_KEY")
 AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_AI_SEARCH_INDEX_NAME")
 
 logging.info(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
+logging.info(f"AI_VISION_ENDPOINT endpoint ==> {AI_VISION_ENDPOINT}")
+
+@app.function_name(name="url")
+@app.route(route="url", methods=["GET"])
+def url(req: func.HttpRequest) -> func.HttpResponse:
+    vision_url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
+    logging.info(f"url HttpRequest triggered: {vision_url}")
+    return f"{vision_url}"
+
+
+@app.function_name(name="test")
+@app.route(route="test", methods=["GET"])
+def test(req: func.HttpRequest) -> func.HttpResponse:
+    vision_url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
+    logging.info(f"test HttpRequest triggered: {vision_url}")
+    headers = {"Ocp-Apim-Subscription-Key": AI_VISION_API_KEY}
+
+    response = requests.get(vision_url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+
+    return func.HttpResponse(f"ERROR: {response.status_code} - {response.text}",
+                             status_code=response.status_code, mimetype="text/plain")
+
 
 @app.function_name(name="index")
 @app.event_grid_trigger(arg_name="event")
@@ -38,7 +62,7 @@ def index(event: func.EventGridEvent):
         'subject': event.subject,
         'event_type': event.event_type,
     })
-    logging.info('Python EventGrid trigger processed an event: %s', result)
+    logging.info('index EventGrid trigger processed an event: %s', result)
         
     # Construct the desired JSON structure
     event_data = {
@@ -57,37 +81,36 @@ def index(event: func.EventGridEvent):
     return vector
 
 
-@app.function_name(name="url")
-@app.route(route="url", methods=["GET"])
-def url(req: func.HttpRequest) -> func.HttpResponse:
-    vision_url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
-    return f"{vision_url}"
+@app.route(route="indexraw", methods=["GET"])
+def indexraw(req: func.HttpRequest) -> func.HttpResponse:
+    image_url = req.params.get('url')
+    recordId = req.params.get('id') or random.randint(1, 1000)
+    event_data = {
+        "recordId": recordId,
+        "data": {
+            "imageUrl": image_url
+        }
+    }
+    
+    logging.info(f"HttpRequest trigger processed an event: {event_data}")
+    values = [event_data]
+    vector = vectorizeImage(values)
+
+    logging.info('vector event: %s', vector)
+    return vector
 
 
-@app.function_name(name="test")
-@app.route(route="test", methods=["GET"])
-def test(req: func.HttpRequest) -> func.HttpResponse:
-    vision_url = f"{AI_VISION_ENDPOINT}/computervision/models?api-version=2023-02-01-preview"
-
-    headers = {"Ocp-Apim-Subscription-Key": AI_VISION_API_KEY}
-
-    response = requests.get(vision_url, headers=headers)
-    if response.status_code == 200:
-        return response.json()
-
-    return func.HttpResponse(f"ERROR: {response.status_code} - {response.text}",
-                             status_code=response.status_code, mimetype="text/plain")
+    return vectorize(req)
 
 
 @app.route(route="GetImageEmbeddings", methods=["POST"])
 def GetImageEmbeddings(req: func.HttpRequest) -> func.HttpResponse:
     return vectorize(req)
 
-
 @app.function_name(name="vectorize")
 @app.route(route="vectorize", methods=["POST"])
 def vectorize(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info("> GetImageEmbeddings:Python HTTP trigger function processed a request.")
+    logging.info("GetImageEmbeddings:Python HTTP trigger function processed a request.")
 
     # Extract values from request payload
     req_body = req.get_body().decode("utf-8")
