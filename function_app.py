@@ -63,12 +63,18 @@ def index(event: func.EventGridEvent):
         'event_type': event.event_type,
     })
     logging.info('index EventGrid trigger processed an event: %s', result)
-        
-    # Construct the desired JSON structure
+
+    event_json = event.get_json()  # This gives you the event data as a dictionary.
+    
+    # Access 'clientRequestId' and 'url' directly from the event's JSON.
+    client_request_id = event_json["clientRequestId"]
+    image_url = event_json["url"]
+    
+    # Construct the desired JSON structure with the extracted values.
     event_data = {
-        "recordId": result["data"]["clientRequestId"],
+        "recordId": client_request_id,
         "data": {
-            "imageUrl": result["data"]["url"]
+            "imageUrl": image_url
         }
     }
     
