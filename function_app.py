@@ -94,10 +94,14 @@ def indexraw(req: func.HttpRequest) -> func.HttpResponse:
     
     logging.info(f"HttpRequest trigger processed an event: {event_data}")
     values = [event_data]
-    vector = vectorizeImage(values)
+    response_values = vectorizeImage(values)
 
-    logging.info('vector event: %s', vector)
-    return vector
+    # Create the response object
+    response_body = {"IndexRaw values": response_values}
+    logging.info(f"IndexRaw Response body: {response_body}")
+
+    # Return the response
+    return func.HttpResponse(json.dumps(response_body), mimetype="application/json")
 
 
 @app.route(route="GetImageEmbeddings", methods=["POST"])
@@ -117,9 +121,9 @@ def vectorize(req: func.HttpRequest) -> func.HttpResponse:
     response_values = vectorizeImage(values)    
 
     # Create the response object
-    response_body = {"values": response_values}
+    response_body = {"Vectorize values": response_values}
 
-    logging.info(f"Response body: {response_body}")
+    logging.info(f"Vectorize Response body: {response_body}")
 
     # Return the response
     return func.HttpResponse(json.dumps(response_body), mimetype="application/json")
