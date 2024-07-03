@@ -109,7 +109,7 @@ def index(event: func.EventGridEvent):
 
 
 @app.route(route="indexraw", methods=["GET"])
-def indexraw(req: func.HttpRequest) -> func.HttpResponse:
+def index_raw(req: func.HttpRequest) -> func.HttpResponse:
     image_url = req.params.get('url')
     recordId = req.params.get('id') or random.randint(1, 1000)
     event_data = {
@@ -126,9 +126,23 @@ def indexraw(req: func.HttpRequest) -> func.HttpResponse:
     # Create the response object
     response_body = {"IndexRaw values": response_values}
     logging.info(f"IndexRaw Response body: {response_body}")
-
-    # Return the response
     return func.HttpResponse(json.dumps(response_body), mimetype="application/json")
+
+def index_url(image_url: str, recordId: int = random.randint(1, 1000)):
+    event_data = {
+        "recordId": recordId,
+        "data": {
+            "imageUrl": image_url
+        }
+    }
+    
+    logging.info(f"HttpRequest trigger processed an event: {event_data}")
+    values = [event_data]
+    vector = vectorizeImage(values)
+
+    logging.info('vector event: %s', vector)
+    return vector
+
 
 
 @app.route(route="GetImageEmbeddings", methods=["POST"])
@@ -148,8 +162,9 @@ def vectorize(req: func.HttpRequest) -> func.HttpResponse:
     response_values = vectorizeImage(values)    
 
     # Create the response object
-    response_body = {"Vectorize values": response_values}
-
+    response_body = {  
+        "values": response_values  
+    }  
     logging.info(f"Vectorize Response body: {response_body}")
 
     # Return the response
