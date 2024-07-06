@@ -1,0 +1,46 @@
+{
+    "@odata.context": "https://ai-search-vision.search.windows.net/$metadata#skillsets/$entity",
+    "@odata.etag": "\"0x8DC9DE69036E913\"",
+    "name": "images-index-1-skillset",
+    "description": "Skillset to extract image vector",
+    "skills": [
+      {
+        "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+        "name": "#1",
+        "description": null,
+        "context": "/document",
+        "uri": "https://<FUNCTION_NAME>.azurewebsites.net/vectorize?code=<FUNCTION_CODE>",
+        "httpMethod": "POST",
+        "timeout": "PT3M50S",
+        "batchSize": 1000,
+        "degreeOfParallelism": null,
+        "authResourceId": null,
+        "inputs": [
+          {
+            "name": "imageUrl",
+            "source": "/document/metadata_storage_path"
+          },
+          {
+            "name": "recordId",
+            "source": "/document/metadata_storage_name"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "imageVector",
+            "targetName": "imageVector"
+          },
+          {
+            "name": "imageUrl",
+            "targetName": "imageUrl"
+          }
+        ],
+        "httpHeaders": {},
+        "authIdentity": null
+      }
+    ],
+    "cognitiveServices": null,
+    "knowledgeStore": null,
+    "indexProjections": null,
+    "encryptionKey": null
+  }

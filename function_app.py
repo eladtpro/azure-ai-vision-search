@@ -1,3 +1,4 @@
+import base64
 import os
 import random
 import azure.functions as func
@@ -212,11 +213,27 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(f"Time taken for florence search: {time.time() - ssrc}")
     # Print the search results
     output = []
+    auth_header = req.headers.get('Authorization')
     for result in results:
+        logging.info(f"Result: {result}")
+        imageUrl = result["imageUrl"]
+        sas_token = helper_functions.create_service_sas_blob(imageUrl)
+        url = f"{imageUrl}?{sas_token}"
+        response = requests.get(url, headers={"Authorization": auth_header})
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            # Convert the image data to base64
+            base64_image = base64.b64encode(response.content).decode('utf-8')
+            logging.info(f"Base64 Image:{base64_image}")
+        else:
+            base64_image = f"Failed to download image. Status code: {response.status_code}"
+
         output.append(
             {
                 "Title": result["title"],
-                "Image URL": result["imageUrl"],
+                "Image URL": imageUrl,
+                "Image": base64_image,
                 "Score": result["@search.score"],
             }
         )

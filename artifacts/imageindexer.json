@@ -1,0 +1,22 @@
+{
+    "@odata.context": "https://<AI_SEARCH_NAME>.search.windows.net/$metadata#indexers/$entity",
+    "@odata.etag": "\"0x8DC9DF2339FC119\"",
+    "name": "imageindexer",
+    "description": null,
+    "dataSourceName": "staiimages",
+    "skillsetName": "images-index-1-skillset",
+    "targetIndexName": "vector-images",
+    "disabled": null,
+    "schedule": null,
+    "parameters": {
+      "batchSize": null,
+      "maxFailedItems": null,
+      "maxFailedItemsPerBatch": null,
+      "base64EncodeKeys": null,
+      "configuration": {}
+    },
+    "fieldMappings": [],
+    "outputFieldMappings": [],
+    "cache": null,
+    "encryptionKey": null
+  }
