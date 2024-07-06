@@ -30,6 +30,7 @@ AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_INDEX_NAME")
 logging.info(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 logging.info(f"AI_VISION_ENDPOINT endpoint ==> {AI_VISION_ENDPOINT}")
 
+
 @app.function_name(name="url")
 @app.route(route="url", methods=["GET"])
 def url(req: func.HttpRequest) -> func.HttpResponse:
@@ -82,7 +83,7 @@ def index(event: func.EventGridEvent):
     logging.info(f"EventGrid trigger processed an event: {event_data}")    
 
     values = [event_data]
-    response_values = vectorizeImage(values)
+    response_values = vectorize_image(values)
 
     # Create the response object
     response_body = {"IndexRaw values": response_values}
@@ -112,9 +113,9 @@ def index(event: func.EventGridEvent):
 @app.route(route="indexraw", methods=["GET"])
 def index_raw(req: func.HttpRequest) -> func.HttpResponse:
     image_url = req.params.get('url')
-    recordId = req.params.get('id') or random.randint(1, 1000)
+    record_id = req.params.get('id') or random.randint(1, 1000)
     event_data = {
-        "recordId": recordId,
+        "recordId": record_id,
         "data": {
             "imageUrl": image_url
         }
@@ -122,16 +123,17 @@ def index_raw(req: func.HttpRequest) -> func.HttpResponse:
     
     logging.info(f"HttpRequest trigger processed an event: {event_data}")
     values = [event_data]
-    response_values = vectorizeImage(values)
+    response_values = vectorize_image(values)
 
     # Create the response object
     response_body = {"IndexRaw values": response_values}
     logging.info(f"IndexRaw Response body: {response_body}")
     return func.HttpResponse(json.dumps(response_body), mimetype="application/json")
 
-def index_url(image_url: str, recordId: int = random.randint(1, 1000)):
+
+def index_url(image_url: str, record_id: int = random.randint(1, 1000)):
     event_data = {
-        "recordId": recordId,
+        "recordId": record_id,
         "data": {
             "imageUrl": image_url
         }
@@ -139,16 +141,16 @@ def index_url(image_url: str, recordId: int = random.randint(1, 1000)):
     
     logging.info(f"HttpRequest trigger processed an event: {event_data}")
     values = [event_data]
-    vector = vectorizeImage(values)
+    vector = vectorize_image(values)
 
     logging.info('vector event: %s', vector)
     return vector
 
 
-
 @app.route(route="GetImageEmbeddings", methods=["POST"])
-def GetImageEmbeddings(req: func.HttpRequest) -> func.HttpResponse:
+def get_image_embeddings(req: func.HttpRequest) -> func.HttpResponse:
     return vectorize(req)
+
 
 @app.function_name(name="vectorize")
 @app.route(route="vectorize", methods=["POST"])
@@ -160,7 +162,7 @@ def vectorize(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(f"Request body: {req_body}")
     request = json.loads(req_body)
     values = request["values"]
-    response_values = vectorizeImage(values)    
+    response_values = vectorize_image(values)    
 
     # Create the response object
     response_body = {  
@@ -216,23 +218,23 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
     auth_header = req.headers.get('Authorization')
     for result in results:
         logging.info(f"Result: {result}")
-        imageUrl = result["imageUrl"]
-        sas_token = helper_functions.create_service_sas_blob(imageUrl)
-        url = f"{imageUrl}?{sas_token}"
-        response = requests.get(url, headers={"Authorization": auth_header})
+        image_url = result["imageUrl"]
+        sas_token = helper_functions.create_service_sas_blob(image_url)
+        sas_url = f"{image_url}?{sas_token}"
+        response = requests.get(sas_url, headers={"Authorization": auth_header})
 
         # Check if the request was successful
         if response.status_code == 200:
             # Convert the image data to base64
             base64_image = base64.b64encode(response.content).decode('utf-8')
-            logging.info(f"Base64 Image:{base64_image}")
+            logging.info(f"Base64 Image: {base64_image}")
         else:
             base64_image = f"Failed to download image. Status code: {response.status_code}"
 
         output.append(
             {
                 "Title": result["title"],
-                "Image URL": imageUrl,
+                "Image URL": image_url,
                 "Image": base64_image,
                 "Score": result["@search.score"],
             }
@@ -240,27 +242,27 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
     return json.dumps(output)
 
 
-def vectorizeImage(values):
+def vectorize_image(values):
     # Process values and generate the response payload
     response_values = []
     for value in values:
-        imageUrl = value["data"]["imageUrl"]
-        recordId = value["recordId"]
-        logging.info(f"Input imageUrl: {imageUrl}")
-        logging.info(f"Input recordId: {recordId}")
+        image_url = value["data"]["imageUrl"]
+        record_id = value["recordId"]
+        logging.info(f"Input imageUrl: {image_url}")
+        logging.info(f"Input recordId: {record_id}")
 
         # Get image embeddings
-        sas_token = helper_functions.create_service_sas_blob(imageUrl)
+        sas_token = helper_functions.create_service_sas_blob(image_url)
 
-        vector = helper_functions.get_image_embeddings(imageUrl, sas_token)
+        vector = helper_functions.get_image_embeddings(image_url, sas_token)
 
         # Add the processed value to the response payload
         response_values.append(
             {
-                "recordId": recordId,
+                "recordId": record_id,
                 "data": {
                     "imageVector": vector,
-                    "imageUrl": imageUrl
+                    "imageUrl": image_url
                 },
                 "errors": None,
                 "warnings": None,
