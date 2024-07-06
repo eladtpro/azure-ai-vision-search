@@ -241,8 +241,10 @@ def vectorizeImage(values):
         response_values.append(
             {
                 "recordId": recordId,
-                "imageVector": vector,
-                "imageUrl": imageUrl,
+                "data": {
+                    "imageVector": vector,
+                    "imageUrl": imageUrl
+                },
                 "errors": None,
                 "warnings": None,
             }
