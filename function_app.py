@@ -147,10 +147,49 @@ def index_url(image_url: str, record_id: int = random.randint(1, 1000)):
     return vector
 
 
-@app.route(route="GetImageEmbeddings", methods=["POST"])
-def get_image_embeddings(req: func.HttpRequest) -> func.HttpResponse:
-    return vectorize(req)
+@app.route(route="GetImageEmbeddings")
+def GetImageEmbeddings(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info('> GetImageEmbeddings:Python HTTP trigger function processed a request.')  
+ 
+    # Extract values from request payload  
+    req_body = req.get_body().decode('utf-8')  
+    logging.info(f"Request body: {req_body}")  
+    request = json.loads(req_body)  
+    values = request['values']  
+ 
+    # Process values and generate the response payload  
+    response_values = []  
+    for value in values:  
+        imageUrl = value['data']['imageUrl']  
+        recordId = value['recordId']  
+        logging.info(f"Input imageUrl: {imageUrl}")  
+        logging.info(f"Input recordId: {recordId}")  
+ 
+        #TODO Add SaS token to imageUrl for non-public containers
+        # Get image embeddings  
+        sas_token = helper_functions.create_service_sas_blob(imageUrl)
 
+        vector = helper_functions.get_image_embeddings(imageUrl, sas_token)  
+ 
+        # Add the processed value to the response payload  
+        response_values.append({  
+            "recordId": recordId,  
+            "data": {  
+                "vector": vector  
+            },  
+            "errors": None,  
+            "warnings": None  
+        })  
+ 
+    # Create the response object  
+    response_body = {  
+        "values": response_values  
+    }  
+
+    logging.info(f"Response body: {response_body}")  
+ 
+    # Return the response  
+    return func.HttpResponse(json.dumps(response_body), mimetype="application/json") 
 
 @app.function_name(name="vectorize")
 @app.route(route="vectorize", methods=["POST"])
@@ -255,8 +294,7 @@ def vectorize_image(value):
     try:
         image_url = value["data"]["imageUrl"]
         record_id = value["recordId"]
-        logging.info(f"Input imageUrl: {image_url}")
-        logging.info(f"Input recordId: {record_id}")
+        logging.info(f"Input: recordId: {record_id}, imageUrl: {image_url}")
 
         # Get image embeddings
         sas_token = helper_functions.create_service_sas_blob(image_url)

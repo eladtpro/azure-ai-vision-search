@@ -1,0 +1,30 @@
+{
+    "@odata.context": "https://<AI_SEARCH>.search.windows.net/$metadata#indexers/$entity",
+    "@odata.etag": "\"0x8DCA015B21B6E82\"",
+    "name": "vectorize-images-indexer",
+    "description": null,
+    "dataSourceName": "staiimages",
+    "skillsetName": "vectorize-images",
+    "targetIndexName": "vector-images",
+    "disabled": null,
+    "schedule": null,
+    "parameters": {
+      "batchSize": 1000,
+      "maxFailedItems": null,
+      "maxFailedItemsPerBatch": null,
+      "base64EncodeKeys": null,
+      "configuration": {}
+    },
+    "fieldMappings": [],
+    "outputFieldMappings": [],
+    "cache": {
+      "id": "25a13c4e-7cab-4b83-9d4d-7f4ee174a4a6",
+      "enableReprocessing": true,
+      "storageConnectionString": null,
+      "identity": {
+        "@odata.type": "#Microsoft.Azure.Search.DataUserAssignedIdentity",
+        "userAssignedIdentity": ""
+      }
+    },
+    "encryptionKey": null
+  }
