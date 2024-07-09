@@ -83,7 +83,7 @@ def index(event: func.EventGridEvent):
     logging.info(f"EventGrid trigger processed an event: {event_data}")    
 
     values = [event_data]
-    response_values = vectorize_image(values)
+    response_values = vectorize_images(values)
 
     # Create the response object
     response_body = {"IndexRaw values": response_values}
@@ -123,7 +123,7 @@ def index_raw(req: func.HttpRequest) -> func.HttpResponse:
     
     logging.info(f"HttpRequest trigger processed an event: {event_data}")
     values = [event_data]
-    response_values = vectorize_image(values)
+    response_values = vectorize_images(values)
 
     # Create the response object
     response_body = {"IndexRaw values": response_values}
@@ -141,7 +141,7 @@ def index_url(image_url: str, record_id: int = random.randint(1, 1000)):
     
     logging.info(f"HttpRequest trigger processed an event: {event_data}")
     values = [event_data]
-    vector = vectorize_image(values)
+    vector = vectorize_images(values)
 
     logging.info('vector event: %s', vector)
     return vector
@@ -162,7 +162,7 @@ def vectorize(req: func.HttpRequest) -> func.HttpResponse:
     logging.info(f"Request body: {req_body}")
     request = json.loads(req_body)
     values = request["values"]
-    response_values = vectorize_image(values)    
+    response_values = vectorize_images(values)    
 
     # Create the response object
     response_body = {  
@@ -242,10 +242,17 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
     return json.dumps(output)
 
 
-def vectorize_image(values):
+def vectorize_images(values):
     # Process values and generate the response payload
     response_values = []
     for value in values:
+        response_value = vectorize_image(value)
+        logging.info(f"Response value: {response_value}")
+        response_values.append(response_value)
+    return response_values
+
+def vectorize_image(value):
+    try:
         image_url = value["data"]["imageUrl"]
         record_id = value["recordId"]
         logging.info(f"Input imageUrl: {image_url}")
@@ -256,19 +263,24 @@ def vectorize_image(values):
 
         vector = helper_functions.get_image_embeddings(image_url, sas_token)
 
-        # Add the processed value to the response payload
-        response_values.append(
-            {
-                "recordId": record_id,
-                "data": {
-                    "imageVector": vector,
-                    "imageUrl": image_url
-                },
-                "errors": None,
-                "warnings": None,
-            }
-        )
-    return response_values
+        response_value = {
+            "recordId": record_id,
+            "data": {
+                "imageVector": vector,
+                "imageUrl": image_url
+            },
+            "errors": None,
+            "warnings": None,
+        }
+    except Exception as e:
+        logging.error(f"Error: {e}")
+        response_value = {
+            "recordId": record_id,
+            "data": None,
+            "errors": str(e),
+            "warnings": None,
+        }
+    return response_value
 
 
 def ask_openai(query):
