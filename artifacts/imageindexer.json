@@ -1,22 +1,38 @@
 {
-    "@odata.context": "https://<AI_SEARCH_NAME>.search.windows.net/$metadata#indexers/$entity",
-    "@odata.etag": "\"0x8DC9DF2339FC119\"",
-    "name": "imageindexer",
-    "description": null,
-    "dataSourceName": "staiimages",
-    "skillsetName": "images-index-1-skillset",
-    "targetIndexName": "vector-images",
-    "disabled": null,
-    "schedule": null,
-    "parameters": {
-      "batchSize": null,
-      "maxFailedItems": null,
-      "maxFailedItemsPerBatch": null,
-      "base64EncodeKeys": null,
-      "configuration": {}
+  "@odata.context": "https://<AI_SEARCH_NAME>.search.windows.net/$metadata#indexers/$entity",
+  "@odata.etag": "\"0x8DCA022E37F5F5F\"",
+  "name": "imageindexer",
+  "description": null,
+  "dataSourceName": "<STORAGE_ACCOUNT_NAME>",
+  "skillsetName": "images-index-1-skillset",
+  "targetIndexName": "testomriandstav",
+  "disabled": null,
+  "schedule": null,
+  "parameters": {
+    "batchSize": null,
+    "maxFailedItems": null,
+    "maxFailedItemsPerBatch": null,
+    "base64EncodeKeys": null,
+    "configuration": {}
+  },
+  "fieldMappings": [
+    {
+      "sourceFieldName": "metadata_storage_path",
+      "targetFieldName": "imageUrl",
+      "mappingFunction": null
     },
-    "fieldMappings": [],
-    "outputFieldMappings": [],
-    "cache": null,
-    "encryptionKey": null
-  }
+    {
+      "sourceFieldName": "metadata_storage_name",
+      "targetFieldName": "title",
+      "mappingFunction": null
+    }
+  ],
+  "outputFieldMappings": [
+    {
+      "sourceFieldName": "/document/imageVector",
+      "targetFieldName": "imageVector"
+    }
+  ],
+  "cache": null,
+  "encryptionKey": null
+}

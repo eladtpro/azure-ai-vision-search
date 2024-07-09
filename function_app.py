@@ -268,7 +268,7 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
             base64_image = base64.b64encode(response.content).decode('utf-8')
             logging.info(f"Base64 Image: {base64_image}")
         else:
-            base64_image = f"Failed to download image. Status code: {response.status_code}"
+            base64_image = f"Failed to download image. Status code: {response.status_code}, Reason: {response.reason}"
 
         output.append(
             {

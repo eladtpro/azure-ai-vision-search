@@ -1,0 +1,138 @@
+{
+    "@odata.context": "https://<AI_SEARCH_NAME>.search.windows.net/$metadata#indexes/$entity",
+    "@odata.etag": "\"0x8DC95D51EE3826F\"",
+    "name": "testomriandstav",
+    "defaultScoringProfile": null,
+    "fields": [
+      {
+        "name": "id",
+        "type": "Edm.String",
+        "searchable": false,
+        "filterable": true,
+        "retrievable": true,
+        "stored": true,
+        "sortable": true,
+        "facetable": true,
+        "key": true,
+        "indexAnalyzer": null,
+        "searchAnalyzer": null,
+        "analyzer": null,
+        "normalizer": null,
+        "dimensions": null,
+        "vectorSearchProfile": null,
+        "vectorEncoding": null,
+        "synonymMaps": []
+      },
+      {
+        "name": "imageUrl",
+        "type": "Edm.String",
+        "searchable": true,
+        "filterable": true,
+        "retrievable": true,
+        "stored": true,
+        "sortable": true,
+        "facetable": true,
+        "key": false,
+        "indexAnalyzer": null,
+        "searchAnalyzer": null,
+        "analyzer": null,
+        "normalizer": null,
+        "dimensions": null,
+        "vectorSearchProfile": null,
+        "vectorEncoding": null,
+        "synonymMaps": []
+      },
+      {
+        "name": "title",
+        "type": "Edm.String",
+        "searchable": true,
+        "filterable": true,
+        "retrievable": true,
+        "stored": true,
+        "sortable": true,
+        "facetable": true,
+        "key": false,
+        "indexAnalyzer": null,
+        "searchAnalyzer": null,
+        "analyzer": null,
+        "normalizer": null,
+        "dimensions": null,
+        "vectorSearchProfile": null,
+        "vectorEncoding": null,
+        "synonymMaps": []
+      },
+      {
+        "name": "imageVector",
+        "type": "Collection(Edm.Single)",
+        "searchable": true,
+        "filterable": false,
+        "retrievable": true,
+        "stored": true,
+        "sortable": false,
+        "facetable": false,
+        "key": false,
+        "indexAnalyzer": null,
+        "searchAnalyzer": null,
+        "analyzer": null,
+        "normalizer": null,
+        "dimensions": 1024,
+        "vectorSearchProfile": "myHnswProfile",
+        "vectorEncoding": null,
+        "synonymMaps": []
+      }
+    ],
+    "scoringProfiles": [],
+    "corsOptions": null,
+    "suggesters": [],
+    "analyzers": [],
+    "normalizers": [],
+    "tokenizers": [],
+    "tokenFilters": [],
+    "charFilters": [],
+    "encryptionKey": null,
+    "similarity": {
+      "@odata.type": "#Microsoft.Azure.Search.BM25Similarity",
+      "k1": null,
+      "b": null
+    },
+    "semantic": null,
+    "vectorSearch": {
+      "algorithms": [
+        {
+          "name": "myHnsw",
+          "kind": "hnsw",
+          "hnswParameters": {
+            "metric": "cosine",
+            "m": 4,
+            "efConstruction": 400,
+            "efSearch": 1000
+          },
+          "exhaustiveKnnParameters": null
+        },
+        {
+          "name": "myExhaustiveKnn",
+          "kind": "exhaustiveKnn",
+          "hnswParameters": null,
+          "exhaustiveKnnParameters": {
+            "metric": "cosine"
+          }
+        }
+      ],
+      "profiles": [
+        {
+          "name": "myHnswProfile",
+          "algorithm": "myHnsw",
+          "vectorizer": null,
+          "compression": null
+        },
+        {
+          "name": "myExhaustiveKnnProfile",
+          "algorithm": "myExhaustiveKnn",
+          "vectorizer": null,
+          "compression": null
+        }
+      ],
+      "vectorizers": [],
+      "compressions": []
+    }
+  }

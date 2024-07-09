@@ -1,6 +1,6 @@
 {
-  "@odata.context": "https://<AI_SEARCH>.search.windows.net/$metadata#skillsets/$entity",
-  "@odata.etag": "\"0x8DC9DE69036E913\"",
+  "@odata.context": "https://<AI_SEARCH_NAME>.search.windows.net/$metadata#skillsets/$entity",
+  "@odata.etag": "\"0x8DCA022BAE57762\"",
   "name": "images-index-1-skillset",
   "description": "Skillset to extract image vector",
   "skills": [
@@ -9,13 +9,12 @@
       "name": "#1",
       "description": null,
       "context": "/document",
-      "uri": "https://<FUNCTION_NAME>.azurewebsites.net/vectorize?code=<FUNCTION_CODE>",
+      "uri": "<FUNCTION_BASE_URL>/vectorize?code=<FUNCTION_CODE>",
       "httpMethod": "POST",
       "timeout": "PT3M50S",
       "batchSize": 1000,
       "degreeOfParallelism": null,
-      "authResourceId": "az webapp auth show --name func-vision-premium --resource-group azure-vision --query '{Enabled:enabled, TokenStoreEnabled:tokenStoreEnabled, ClientId:clientId}' --output table",
-      "authResourceId": "<RESOURCE_ID>",
+      "authResourceId": null,
       "inputs": [
         {
           "name": "imageUrl",
@@ -30,20 +29,16 @@
         {
           "name": "imageVector",
           "targetName": "imageVector"
-        },
-        {
-          "name": "imageUrl",
-          "targetName": "imageUrl"
         }
       ],
       "httpHeaders": {},
-      "authIdentity": {
-        "@odata.type": "#Microsoft.Azure.Search.DataUserAssignedIdentity",
-        "resourceId": "/subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.ManagedIdentity/userAssignedIdentities/<identity-name>"
-      }
+      "authIdentity": null
     }
   ],
-  "cognitiveServices": null,
+  "cognitiveServices": {
+    "@odata.type": "#Microsoft.Azure.Search.DefaultCognitiveServices",
+    "description": null
+  },
   "knowledgeStore": null,
   "indexProjections": null,
   "encryptionKey": null
