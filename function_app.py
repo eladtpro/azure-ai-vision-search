@@ -260,21 +260,22 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
         image_url = result["imageUrl"]
         sas_token = helper_functions.create_service_sas_blob(image_url)
         sas_url = f"{image_url}?{sas_token}"
-        response = requests.get(sas_url, headers={"Authorization": auth_header})
+        # response = requests.get(sas_url, headers={"Authorization": auth_header})
 
-        # Check if the request was successful
-        if response.status_code == 200:
-            # Convert the image data to base64
-            base64_image = base64.b64encode(response.content).decode('utf-8')
-            logging.info(f"Base64 Image: {base64_image}")
-        else:
-            base64_image = f"Failed to download image. Status code: {response.status_code}, Reason: {response.reason}"
+        # # Check if the request was successful
+        # if response.status_code == 200:
+        #     # Convert the image data to base64
+        #     base64_image = base64.b64encode(response.content).decode('utf-8')
+        #     logging.info(f"Base64 Image: {base64_image}")
+        # else:
+        #     base64_image = f"Failed to download image. Status code: {response.status_code}, Reason: {response.reason}"
 
         output.append(
             {
                 "Title": result["title"],
                 "Image URL": image_url,
-                "Image": base64_image,
+                # "Image": base64_image,
+                "Image": sas_url,
                 "Score": result["@search.score"],
             }
         )
