@@ -14,6 +14,9 @@
         "AI_SEARCH_SERVICE_ENDPOINT":"<Your Azure Search Service Endpoint>",
         "AZURE_SEARCH_ADMIN_KEY":"<Your Azure Search Admin Key>",
         "AI_SEARCH_INDEX_NAME":"<Your Azure Search Index Name>",
-        "ACCOUNT_KEY":"<Your Account Key>"
+        "ACCOUNT_KEY":"<Your Account Key>",
+        "AZURE_CLIENT_ID":"<Your Azure Client ID>",
+        "AZURE_CLIENT_SECRET":"<Your Azure Client Secret>",
+        "AZURE_TENANT_ID":"<Your Azure Tenant ID>"
     }
 }

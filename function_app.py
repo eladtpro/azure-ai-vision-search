@@ -297,7 +297,8 @@ def vectorize_image(value):
         logging.info(f"Input: recordId: {record_id}, imageUrl: {image_url}")
 
         # Get image embeddings
-        sas_token = helper_functions.create_service_sas_blob(image_url)
+        # sas_token = helper_functions.create_service_sas_blob(image_url)
+        sas_token = helper_functions.create_user_delegated_sas_token(image_url)
 
         vector = helper_functions.get_image_embeddings(image_url, sas_token)
 
