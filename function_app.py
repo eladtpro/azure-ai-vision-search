@@ -258,7 +258,9 @@ def search(req: func.HttpRequest) -> func.HttpResponse:
     for result in results:
         logging.info(f"Result: {result}")
         image_url = result["imageUrl"]
-        sas_token = helper_functions.create_service_sas_blob(image_url)
+        sas_token = helper_functions.create_user_delegated_sas_token(image_url, auth_header)
+        # sas_token = helper_functions.create_service_sas_blob(image_url)
+        
         sas_url = f"{image_url}?{sas_token}"
         # response = requests.get(sas_url, headers={"Authorization": auth_header})
 
@@ -298,8 +300,8 @@ def vectorize_image(value):
         logging.info(f"Input: recordId: {record_id}, imageUrl: {image_url}")
 
         # Get image embeddings
-        # sas_token = helper_functions.create_service_sas_blob(image_url)
-        sas_token = helper_functions.create_user_delegated_sas_token(image_url)
+        sas_token = helper_functions.create_service_sas_blob(image_url)
+        # sas_token = helper_functions.create_user_delegated_sas_token(image_url)
 
         vector = helper_functions.get_image_embeddings(image_url, sas_token)
 
