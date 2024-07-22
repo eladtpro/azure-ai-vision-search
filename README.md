@@ -1,5 +1,5 @@
 # Vector Image Search using Azure OpenAI with Azure AI Search
-![Diagram](/assets/diagram.png)
+![Diagram](/assets/diagram_vector_search.png)
 
 
 In this article, we dive into the core functionalities of the azure-ai-vision-search repository, focusing on the ***search*** and ***vectorize*** methods in the [function_app.py](/function_app.py) file. These methods are pivotal in integrating Azure's AI services to perform vector image searches.
@@ -41,6 +41,10 @@ The search method facilitates image similarity searches using vectors generated 
 * The response is returned as a JSON object, containing the image URLs, titles, and search scores.  
 
 The ***search*** method integrates Azure OpenAI and Azure AI Search to perform efficient and accurate image similarity searches. By converting textual queries into vector embeddings, it ensures that the search results are relevant and precise.
+
+## Azure Resources
+The azure-ai-vision-search repository leverages several Azure services to enable vector image searches:
+![Azure Resources](/assets/azure-resources.png)
 
 ## Conclusion
 The ***vectorize*** and ***search*** methods in the azure-ai-vision-search repository exemplify the powerful integration of Azure's AI services. The ***vectorize*** method transforms images into vector embeddings, while the ***search*** method leverages these embeddings for similarity searches. Together, they enable a robust and efficient vector image search solution using **Azure OpenAI** and **Azure AI Search**.
