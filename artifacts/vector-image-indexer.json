@@ -1,11 +1,11 @@
 {
   "@odata.context": "https://<AI_SEARCH_NAME>.search.windows.net/$metadata#indexers/$entity",
   "@odata.etag": "\"0x8DCA022E37F5F5F\"",
-  "name": "imageindexer",
+  "name": "vector-image-indexer",
   "description": null,
   "dataSourceName": "<STORAGE_ACCOUNT_NAME>",
-  "skillsetName": "images-index-1-skillset",
-  "targetIndexName": "testomriandstav",
+  "skillsetName": "vector-image-skillset",
+  "targetIndexName": "vector-image-index-db",
   "disabled": null,
   "schedule": null,
   "parameters": {

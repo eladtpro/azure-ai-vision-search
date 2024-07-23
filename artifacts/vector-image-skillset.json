@@ -1,7 +1,7 @@
 {
   "@odata.context": "https://<AI_SEARCH_NAME>.search.windows.net/$metadata#skillsets/$entity",
   "@odata.etag": "\"0x8DCA022BAE57762\"",
-  "name": "images-index-1-skillset",
+  "name": "vector-image-skillset",
   "description": "Skillset to extract image vector",
   "skills": [
     {
