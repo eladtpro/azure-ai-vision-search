@@ -4,6 +4,30 @@
 
 In this article, we dive into the core functionalities of the azure-ai-vision-search repository, focusing on the ***search*** and ***vectorize*** methods in the [function_app.py](/function_app.py) file. These methods are pivotal in integrating Azure's AI services to perform vector image searches.
 
+
+## Azure AI Search Schema
+
+Below are Azure AI Search schema files that define the index, indexer, and skillset used to store and process image data for efficient search and retrieval. These files are used to configure the Azure AI Search service to work with the vector image search solution. 
+
+#### 1. Index Definition 
+* **File**: [vector-image-index-db.json](/artifacts/vector-image-index-db.json)  
+* **Role**: Defines the structure and schema of the search index.  
+* **Details**: Specifies the fields, their data types, and attributes (e.g., searchable, filterable) that will be used to store and retrieve the image metadata and embeddings.  
+
+#### 2. Indexer Definition 
+* **File**: [vector-image-indexer.json](/artifacts/vector-image-indexer.json)  
+* **Role**: Configures how data from the data source (e.g., Azure Storage) is ingested into the search index.  
+* **Details**: Specifies the data source, scheduling, and mapping of data fields from the source to the index. It handles the scanning of new images and updates the index accordingly.  
+
+#### 3. Skillset Definition
+* **File**: [vector-image-skillset.json](/artifacts/vector-image-skillset.json)  
+* **Role**: Defines the AI enrichment pipeline to extract and transform information from the images before indexing.  
+* **Details**: Specifies a series of cognitive skills (e.g., image recognition, OCR) that process the images and generate enriched data (e.g., tags, embeddings) used in the search index.  
+
+These components work together to enable the ingestion, transformation, and indexing of image data, allowing efficient search and retrieval using Azure AI Search service, with **the indexer triggering the vectorize Azure Function for handling image embeddings**.
+
+
+
 ## The *vectorize* Method
 The *vectorize* method is responsible for converting images into vector embeddings. This process involves several steps:
 
