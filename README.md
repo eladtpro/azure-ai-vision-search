@@ -19,17 +19,6 @@ Imagine having a vast collection of images and needing to find similar ones base
 * Azure Functions setup for processing [Create python function](https://learn.microsoft.com/en-us/azure/azure-functions/functions-create-function-app-portal?pivots=programming-language-python)
 * Tools: Azure CLI, Visual Studio Code, and Postman for API testing
 
-## Variables
-Key variables to configure include:
-
-```bash
-AZURE_SEARCH_SERVICE_NAME: Your Azure AI Search service name
-AZURE_SEARCH_ADMIN_KEY: Admin key for Azure AI Search
-AZURE_OPENAI_ENDPOINT: Endpoint for Azure OpenAI service
-AZURE_OPENAI_KEY: Key for Azure OpenAI service
-STORAGE_ACCOUNT_NAME: Your Azure Storage account name
-```
-
 
 ## AI Search Setup
 ![Search and Indexer](/readme/skillset-process-diagram-1.png)
@@ -38,27 +27,44 @@ Below are Azure AI Search schema files that define the **index**, **indexer**, a
 **Open the Azure AI Search service** in the Azure portal and navigate to each section to upload the corresponding JSON file.
 
 #### 1. Create Index  
-Defines the structure and schema of the search index.  
-Specifies the fields, their data types, and attributes (e.g., searchable, filterable) that will be used to store and retrieve the image metadata and embeddings.  
-**Goto Indexes blade and create a new index** using this JSON definition file [vector-image-index-db.json](/artifacts/vector-image-index-db.json)
+This defines the structure and schema of the search index, including specifying fields, data types, and attributes. 
+Go to the Indexes blade and create a new index using the JSON definition file [vector-image-index-db.json](/artifacts/vector-image-index-db.json).
 ![Index](/readme/azure-search-index-setup.png)
 
 #### 2. Create Indexer
-Configures how data from the data source (e.g., Azure Storage) is ingested into the search index.  
-Specifies the data source, scheduling, and mapping of data fields from the source to the index. It handles the scanning of new images and updates the index accordingly.  
-Navigate to the **Indexers** blade and **create a new indexer** using this JSON definition file [vector-image-indexer.json](/artifacts/vector-image-indexer.json)
+Set up an indexer to manage data ingestion from a source like Azure Storage to the search index. Use the [vector-image-indexer.json](/artifacts/vector-image-indexer.json) file in the Indexers blade to create a new indexer.
 ![Indexer](/readme/azure-search-indexer-setup.png)
 
 #### 3. Create Skillset
-Defines the AI enrichment pipeline to extract and transform information from the images before indexing.  
-Specifies a series of cognitive skills (e.g., image recognition, OCR) that process the images and generate enriched data (e.g., tags, embeddings) used in the search index.  
-Navigate to the **Skillsets** blade and **create a new skillset** using this JSON definition file [vector-image-skillset.json](/artifacts/vector-image-skillset.json)
+Create a skillset to define the AI enrichment pipeline for image processing before indexing. Use the JSON definition file [vector-image-skillset.json](/artifacts/vector-image-skillset.json) to create a new skillset in the Skillsets blade.
 ![Skillset](/readme/azure-search-skillset-setup.png)
 
 These components work together to enable the ingestion, transformation, and indexing of image data, allowing efficient search and retrieval using Azure AI Search service, with **the indexer triggering the vectorize Azure Function for handling image embeddings**.  
 
 
-## Azure Function GitHub Action Setup 
+## Azure Function Setup 
+
+
+#### Variables
+Configuration variables are stored in the [local.settings.json](/local.settings.json) file and should be set as part of the Azure Function Rnvironment variables blase.
+Key variables to configure include:
+
+```
+AZURE_OPENAI_API_KEY:<Your Azure OpenAI API Key>,
+AZURE_OPENAI_ENDPOINT:<Your Azure OpenAI Endpoint>,
+OPEN_AI_MODEL:gpt-35-turbo, 
+API_VERSION:2024-02-01,
+AI_VISION_ENDPOINT:<Your Azure Vision Endpoint>,
+AI_VISION_API_KEY:<Your Azure Vision API Key>,
+AI_SEARCH_SERVICE_ENDPOINT:<Your Azure Search Service Endpoint>,
+AZURE_SEARCH_ADMIN_KEY:<Your Azure Search Admin Key>,
+AI_SEARCH_INDEX_NAME:<Your Azure Search Index Name>,
+ACCOUNT_KEY:<Your Account Key>,
+```
+![Variables](/readme/azure-function-env-vars.png)
+
+
+#### GitHub Action Workflow
 The function is being deployed automaticlly using a GitHub Action workflow. The function app is responsible for processing image data and performing similarity searches using Azure AI Search. The function app consists of two main methods: ***vectorize*** and ***search***.  
 
 The [main-premium.yml](/.github/workflows/main-premium.yml) GitHub Action workflow file automates the deployment of the function app. It triggers the deployment process whenever changes are pushed to the main branch. The workflow uses the Azure Functions action to deploy the function app to Azure.  
@@ -84,7 +90,7 @@ Using the Search API to Vector Search for Images, Leverage the Azure Search API 
 * Interpret the search results to find similar images.  
 
 
-## Azure Function App Methods Overview
+## Azure Function Explained
 
 ### The *vectorize* Method
 The *vectorize* method is responsible for converting images into vector embeddings. This process involves several steps:
@@ -145,5 +151,5 @@ The azure-ai-vision-search repository leverages several Azure services to enable
 ![Azure Resources](/readme/azure-resources.png)
 
 ## Conclusion
-The ***vectorize*** and ***search*** methods in the azure-ai-vision-search repository exemplify the powerful integration of Azure's AI services. The ***vectorize*** method transforms images into vector embeddings, while the ***search*** method leverages these embeddings for similarity searches. Together, they enable a robust and efficient vector image search solution using **Azure OpenAI** and **Azure AI Search**.
+Combining [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview) with [Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search) provides a powerful solution for vector image search. By following this guide, you can set up and deploy a robust search system to meet various business needs. Explore further possibilities by integrating more advanced AI models and expanding your search capabilities.
 
