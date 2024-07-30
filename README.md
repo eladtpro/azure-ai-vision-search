@@ -88,6 +88,8 @@ Using the Search API to Vector Search for Images, Leverage the Azure Search API 
 
 ## Azure Function Explained
 
+The below sections explain the core functionalities of the Azure Function app, focusing on the ***vectorize*** and ***search*** methods in the [function_app.py](/function_app.py) Python file. These methods are pivotal in integrating Azure's AI services to perform vector image searches.
+
 ### The *vectorize* Method
 The *vectorize* method is responsible for converting images into vector embeddings. This process involves several steps:
 
