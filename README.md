@@ -2,7 +2,7 @@
 ![Diagram](/readme/diagram_vector_search.png)
 
 ## Introduction
-Vector image search uses AI to revolutionize how we find and retrieve images. This article explains how to combine [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview) and [Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search) for an efficient solution. We'll cover setup, deployment, and usage to guide AI developers and engineers. We'll focus on the search and vectorize methods in the function_app.py Python file, crucial for integrating Azure's AI services for vector image searches. This technology is ideal for applications like e-commerce and digital asset management.
+Vector image search uses AI to revolutionize how we find and retrieve images. This article explains how to combine [Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview) and [Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search) for an efficient solution. We'll cover setup, deployment, and usage to guide AI developers and engineers. We'll focus on the search and vectorize methods in the [function_app.py](/function_app.py) Python file, crucial for integrating Azure's AI services for vector image searches. This technology is ideal for applications like e-commerce and digital asset management.
 
 > We dive into the core functionalities of the Azure AI Search service, focusing on the ***search*** and ***vectorize*** methods in the [function_app.py](/function_app.py) python file. These methods are pivotal in integrating Azure's AI services to perform vector image searches.
 
