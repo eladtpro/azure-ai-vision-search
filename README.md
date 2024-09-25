@@ -20,19 +20,23 @@ Vector image search uses AI to revolutionize how we find and retrieve images. Th
 ![Search and Indexer](/readme/skillset-process-diagram-1.png)
 Below are Azure AI Search schema files that define the **index**, **indexer**, and **skillset** used to store and process image data for efficient search and retrieval. These files are used to configure the Azure AI Search service to work with the vector image search solution. 
 
-**Open the Azure AI Search service** in the Azure portal and navigate to each section to upload the corresponding JSON file.
+> **Action**: Open the Azure AI Search service in the Azure portal and navigate to each section below to upload the corresponding JSON file.
 
-#### 1. Create Index  
-This defines the structure and schema of the search index, including specifying fields, data types, and attributes. 
-Go to the Indexes blade and create a new index using the JSON definition file [vector-image-index-db.json](/artifacts/vector-image-index-db.json).
+#### 1. Add Index  
+This defines the structure and schema of the search index, including specifying fields, data types, and attributes.  
+> **Action**: Go to the Indexes blade and create a new index using the JSON definition file [vector-image-index-db.json](/artifacts/vector-image-index-db.json).
+
 ![Index](/readme/azure-search-index-setup.png)
 
-#### 2. Create Indexer
-Set up an indexer to manage data ingestion from a source like Azure Storage to the search index. Use the [vector-image-indexer.json](/artifacts/vector-image-indexer.json) file in the Indexers blade to create a new indexer.
+#### 2. Add Indexer
+Set up an indexer to manage data ingestion from a source like Azure Storage to the search index.  
+> **Action**: Use the [vector-image-indexer.json](/artifacts/vector-image-indexer.json) file in the Indexers blade to create a new indexer.
 ![Indexer](/readme/azure-search-indexer-setup.png)
 
-#### 3. Create Skillset
-Create a skillset to define the AI enrichment pipeline for image processing before indexing. Use the JSON definition file [vector-image-skillset.json](/artifacts/vector-image-skillset.json) to create a new skillset in the Skillsets blade.
+#### 3. Add Skillset
+Create a skillset to define the AI enrichment pipeline for image processing before indexing.  
+> Action: Use the JSON definition file [vector-image-skillset.json](/artifacts/vector-image-skillset.json) to create a new skillset in the Skillsets blade.  
+
 ![Skillset](/readme/azure-search-skillset-setup.png)
 
 These components work together to enable the ingestion, transformation, and indexing of image data, allowing efficient search and retrieval using Azure AI Search service, with **the indexer triggering the vectorize Azure Function for handling image embeddings**.  
@@ -42,32 +46,35 @@ These components work together to enable the ingestion, transformation, and inde
 
 
 #### Variables
-Configuration variables are stored in the [local.settings.json](/local.settings.json) file and should be set as part of the Azure Function Rnvironment variables blase.
+Configuration variables are stored in the [local.settings.json](/local.settings.json) file and should be set as part of the Azure Function Environment variables blade.
 Key variables to configure include:
 
+```bash
+export AZURE_OPENAI_API_KEY=<Your Azure OpenAI API Key>
+export AZURE_OPENAI_ENDPOINT=<Your Azure OpenAI Endpoint>
+export OPEN_AI_MODEL=gpt-35-turbo
+export API_VERSION=2024-02-01
+export AI_VISION_ENDPOINT=<Your Azure Vision Endpoint>
+export AI_VISION_API_KEY=<Your Azure Vision API Key>
+export AI_SEARCH_SERVICE_ENDPOINT=<Your Azure Search Service Endpoint>
+export AZURE_SEARCH_ADMIN_KEY=<Your Azure Search Admin Key>
+export AI_SEARCH_INDEX_NAME=<Your Azure Search Index Name>
+export ACCOUNT_KEY=<Your Account Key>
 ```
-AZURE_OPENAI_API_KEY:<Your Azure OpenAI API Key>,
-AZURE_OPENAI_ENDPOINT:<Your Azure OpenAI Endpoint>,
-OPEN_AI_MODEL:gpt-35-turbo, 
-API_VERSION:2024-02-01,
-AI_VISION_ENDPOINT:<Your Azure Vision Endpoint>,
-AI_VISION_API_KEY:<Your Azure Vision API Key>,
-AI_SEARCH_SERVICE_ENDPOINT:<Your Azure Search Service Endpoint>,
-AZURE_SEARCH_ADMIN_KEY:<Your Azure Search Admin Key>,
-AI_SEARCH_INDEX_NAME:<Your Azure Search Index Name>,
-ACCOUNT_KEY:<Your Account Key>,
-```
+
+> **Action**: Set these variables in the Azure Function App Configuration blade.  
+
 ![Variables](/readme/azure-function-env-vars.png)
 
 
 #### GitHub Action Workflow
-The function is being deployed automaticlly using a GitHub Action workflow. The function app is responsible for processing image data and performing similarity searches using Azure AI Search. The function app consists of two main methods: ***vectorize*** and ***search***.  
+The function is being deployed automatically using a GitHub Action workflow. The function app is responsible for processing image data and performing similarity searches using Azure AI Search. The function app consists of two main methods: ***vectorize*** and ***search***.  
 
 The [main-premium.yml](/.github/workflows/main-premium.yml) GitHub Action workflow file automates the deployment of the function app. It triggers the deployment process whenever changes are pushed to the main branch. The workflow uses the Azure Functions action to deploy the function app to Azure.  
 
-For the workflow to work, you need to set up the following secrets in your GitHub repository:  
-* ***AZURE_RBAC_CREDENTIALS***: Azure service principal credentials with access to the Azure subscription.  
-* ***AZURE_FUNCTIONAPP_PUBLISH_PROFILE_PREMIUM***: Publish profile for the Azure Function app.  
+> **Action**: For the workflow to work, you need to set up the following secrets in your GitHub repository:  
+* ***AZURE_RBAC_CREDENTIALS***: Azure service principal credentials with access to the Azure subscription. more details [here](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-portal%2Clinux#create-a-service-principal).    
+* ***AZURE_FUNCTIONAPP_PUBLISH_PROFILE_PREMIUM***: Publish profile for the Azure Function app. more details [here](https://learn.microsoft.com/en-us/visualstudio/azure/how-to-get-publish-profile-from-azure-app-service?view=vs-2022).  
 
 
 ## Testing the Solution

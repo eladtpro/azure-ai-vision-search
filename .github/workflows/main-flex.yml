@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 env:
-  AZURE_FUNCTIONAPP_NAME: 'func-vision'   # set this to your function app name on Azure
+  AZURE_FUNCTIONAPP_NAME: 'func-eastus-ai-search'   # set this to your function app name on Azure
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'       # set this to the path to your function app project, defaults to the repository root
   PYTHON_VERSION: '3.11'                     # set this to the python version to use (e.g. '3.6', '3.7', '3.8')
 
@@ -42,6 +42,6 @@ jobs:
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }} # Remove publish-profile to use Azure RBAC
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_FLEX_PUBLISH_PROFILE }} # Remove publish-profile to use Azure RBAC
         scm-do-build-during-deployment: true
         enable-oryx-build: true

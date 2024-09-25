@@ -2,7 +2,7 @@ name: Deploy Vision Python app to Azure Function (Premium)
 
 on:
   push:
-    branches: ["main"]
+    branches: ["non-existent-branch"]
 
 env:
   AZURE_FUNCTIONAPP_NAME: 'func-vision-premium'   # set this to your function app name on Azure
