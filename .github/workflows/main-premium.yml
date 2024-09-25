@@ -1,4 +1,4 @@
-name: Deploy Vision Python app to Azure Function (Premium)
+name: Deploy Function (Premium)
 
 on:
   push:

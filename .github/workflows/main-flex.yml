@@ -1,4 +1,4 @@
-name: Deploy Vision Python app to Azure Function (Flex)
+name: Deploy Function (Flex)
 
 on:
   push:
