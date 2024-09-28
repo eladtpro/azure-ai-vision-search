@@ -2,7 +2,7 @@ name: Deploy Function (Flex)
 
 on:
   push:
-    branches: ["main"]
+    branches: ["non-existent-branch"]
 
 env:
   AZURE_FUNCTIONAPP_NAME: 'func-vision-flex'   # set this to your function app name on Azure

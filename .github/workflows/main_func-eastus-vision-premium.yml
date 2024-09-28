@@ -7,7 +7,7 @@ name: Build and deploy Python project to Azure Function App - func-eastus-vision
 on:
   push:
     branches:
-      - main
+      - non-existent-branch
   workflow_dispatch:
 
 env:
