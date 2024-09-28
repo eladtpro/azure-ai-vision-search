@@ -317,7 +317,7 @@ def vectorize_image(value):
             "warnings": None,
         }
     except Exception as e:
-        logging.error(f"vectorize_image Error:/n{e}/n{image_url}/n{sas_token}/n{AI_VISION_API_VERSION}")
+        logging.error(f"vectorize_image Error:\n{e}\n{image_url}\n{sas_token}\n{AI_VISION_API_VERSION}")
         response_value = {
             "recordId": record_id,
             "data": None,
