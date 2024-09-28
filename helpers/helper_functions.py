@@ -17,14 +17,14 @@ from azure.storage.blob import (
 )
 
 
-def get_image_embeddings(imageUrl, sas_token):  
+def get_image_embeddings(imageUrl, sas_token, vestion):  
     cogSvcsEndpoint = os.environ["AI_VISION_ENDPOINT"]  
     cogSvcsApiKey = os.environ["AI_VISION_API_KEY"]  
  
     url = f"{cogSvcsEndpoint}/computervision/retrieval:vectorizeImage"  
  
     params = {  
-        "api-version": "2023-02-01-preview"  
+        "api-version": vestion  
     }  
  
     headers = {  

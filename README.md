@@ -24,18 +24,18 @@ Below are Azure AI Search schema files that define the **index**, **indexer**, a
 
 #### 1. Add Index  
 This defines the structure and schema of the search index, including specifying fields, data types, and attributes.  
-> **Action**: Go to the Indexes blade and create a new index using the JSON definition file [vector-image-index-db.json](/artifacts/vector-image-index-db.json).
+> **Action**: Go to the Indexes blade and create a new index using the JSON definition file [vector-image-index-db.json](/ai-search/vector-image-index-db.json).
 
 ![Index](/readme/azure-search-index-setup.png)
 
 #### 2. Add Indexer
 Set up an indexer to manage data ingestion from a source like Azure Storage to the search index.  
-> **Action**: Use the [vector-image-indexer.json](/artifacts/vector-image-indexer.json) file in the Indexers blade to create a new indexer.
+> **Action**: Use the [vector-image-indexer.json](/ai-search/vector-image-indexer.json) file in the Indexers blade to create a new indexer.
 ![Indexer](/readme/azure-search-indexer-setup.png)
 
 #### 3. Add Skillset
 Create a skillset to define the AI enrichment pipeline for image processing before indexing.  
-> Action: Use the JSON definition file [vector-image-skillset.json](/artifacts/vector-image-skillset.json) to create a new skillset in the Skillsets blade.  
+> Action: Use the JSON definition file [vector-image-skillset.json](/ai-search/vector-image-skillset.json) to create a new skillset in the Skillsets blade.  
 
 ![Skillset](/readme/azure-search-skillset-setup.png)
 

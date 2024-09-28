@@ -26,6 +26,7 @@ AI_VISION_API_KEY = os.getenv("AI_VISION_API_KEY")
 AI_SEARCH_SERVICE_ENDPOINT = os.getenv("AI_SEARCH_SERVICE_ENDPOINT")
 AZURE_SEARCH_ADMIN_KEY = os.getenv("AZURE_SEARCH_ADMIN_KEY")
 AI_SEARCH_INDEX_NAME = os.getenv("AI_SEARCH_INDEX_NAME")
+AI_VISION_API_VERSION = os.getenv("AI_VISION_API_VERSION")
 
 logging.info(f"AOAI endpoint ==> {AZURE_OPENAI_ENDPOINT}")
 logging.info(f"AI_VISION_ENDPOINT endpoint ==> {AI_VISION_ENDPOINT}")
@@ -169,7 +170,7 @@ def GetImageEmbeddings(req: func.HttpRequest) -> func.HttpResponse:
         # Get image embeddings  
         sas_token = helper_functions.create_service_sas_blob(imageUrl)
 
-        vector = helper_functions.get_image_embeddings(imageUrl, sas_token)  
+        vector = helper_functions.get_image_embeddings(imageUrl, sas_token, AI_VISION_API_VERSION)  
  
         # Add the processed value to the response payload  
         response_values.append({  
@@ -303,7 +304,7 @@ def vectorize_image(value):
         sas_token = helper_functions.create_service_sas_blob(image_url)
         # sas_token = helper_functions.create_user_delegated_sas_token(image_url)
 
-        vector = helper_functions.get_image_embeddings(image_url, sas_token)
+        vector = helper_functions.get_image_embeddings(image_url, sas_token, AI_VISION_API_VERSION)
 
         response_value = {
             "recordId": record_id,
@@ -358,7 +359,7 @@ def generate_embeddings_text(text):
     logging.info(f"Input text: {text}")
     logging.info(f"Input AI_VISION_ENDPOINT: {AI_VISION_ENDPOINT}")
 
-    url = f"{AI_VISION_ENDPOINT}/computervision/retrieval:vectorizeText?api-version=2023-02-01-preview"
+    url = f"{AI_VISION_ENDPOINT}/computervision/retrieval:vectorizeText?api-version={AI_VISION_API_VERSION}"
 
     headers = {
         "Content-Type": "application/json",

@@ -1,0 +1,19 @@
+{
+  "@odata.context": "https://<AI_SEARCH_NAME>.search.windows.net/$metadata#datasources/$entity",
+  "@odata.etag": "\"0x8DCDFE1B5FB7451\"",
+  "name": "vector-image-adlsgen2-datasource",
+  "description": null,
+  "type": "adlsgen2",
+  "subtype": null,
+  "credentials": {
+    "connectionString": "ResourceId=/<ADLS_GEN2_RESOURCE_ID>;"
+  },
+  "container": {
+    "name": "media",
+    "query": null
+  },
+  "dataChangeDetectionPolicy": null,
+  "dataDeletionDetectionPolicy": null,
+  "encryptionKey": null,
+  "identity": null
+}

@@ -3,7 +3,7 @@
   "@odata.etag": "\"0x8DCA022E37F5F5F\"",
   "name": "vector-image-indexer",
   "description": null,
-  "dataSourceName": "<STORAGE_ACCOUNT_NAME>",
+  "dataSourceName": "vector-image-adlsgen2-datasource",
   "skillsetName": "vector-image-skillset",
   "targetIndexName": "vector-image-index-db",
   "disabled": null,
