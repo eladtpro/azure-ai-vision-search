@@ -36,12 +36,14 @@ def get_image_embeddings(imageUrl, sas_token, vestion):
         "url": f"{imageUrl}?{sas_token}"
     }  
     
- 
+    logging.info(f"get_image_embeddings request: {url}, {params}, {headers}, {data}")
     response = requests.post(url, params=params, headers=headers, json=data)  
  
     if response.status_code != 200:  
-        logging.error(f"Error: {response.status_code}, {response.text}")  
+        logging.error(f"get_image_embeddings Error: {response.status_code}, {response.text}")  
         response.raise_for_status()  
+    else:
+        logging.info(f"get_image_embeddings response: {response.json()}")
  
     embeddings = response.json()["vector"]  
     return embeddings  
