@@ -295,14 +295,15 @@ def vectorize_images(values):
     return response_values
 
 def vectorize_image(value):
+    logging.info(f"vectorize_image: {value}")
     try:
         image_url = value["data"]["imageUrl"]
         record_id = value["recordId"]
-        logging.info(f"Input: recordId: {record_id}, imageUrl: {image_url}")
 
         # Get image embeddings
         sas_token = helper_functions.create_service_sas_blob(image_url)
         # sas_token = helper_functions.create_user_delegated_sas_token(image_url)
+        logging.info(f"SAS URL: {image_url}?{sas_token}")
 
         vector = helper_functions.get_image_embeddings(image_url, sas_token, AI_VISION_API_VERSION)
 
@@ -316,7 +317,7 @@ def vectorize_image(value):
             "warnings": None,
         }
     except Exception as e:
-        logging.error(f"Error: {e}")
+        logging.error(f"vectorize_image Error:/n{e}/n{image_url}/n{sas_token}/n{AI_VISION_API_VERSION}")
         response_value = {
             "recordId": record_id,
             "data": None,
