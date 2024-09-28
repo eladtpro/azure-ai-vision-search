@@ -13,7 +13,7 @@ on:
 #
 # 2. Change these variables for your configuration:
 env:
-  AZURE_FUNCTIONAPP_NAME: 'func-eastus-vision-premium'   # set this to your function app name on Azure
+  AZURE_FUNCTIONAPP_NAME: 'func-premium-eastus2-public-vision'   # set this to your function app name on Azure
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'       # set this to the path to your function app project, defaults to the repository root
   PYTHON_VERSION: '3.11'                     # set this to the python version to use (e.g. '3.6', '3.7', '3.8')
 
